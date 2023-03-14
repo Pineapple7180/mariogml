@@ -1,0 +1,47 @@
+// Set up some constants for movement
+moveSpeed = 5;
+jumpSpeed = 10;
+gravity = 0.5;
+
+// Initialize some variables for movement and collision
+xSpeed = 0;
+ySpeed = 0;
+onGround = false;
+
+// Define a collision detection function
+function collisionCheck(obj) {
+    if (place_meeting(x + xSpeed, y, obj)) {
+        while (!place_meeting(x + sign(xSpeed), y, obj)) {
+            x += sign(xSpeed);
+        }
+        xSpeed = 0;
+    }
+    if (place_meeting(x, y + ySpeed, obj)) {
+        while (!place_meeting(x, y + sign(ySpeed), obj)) {
+            y += sign(ySpeed);
+        }
+        ySpeed = 0;
+        onGround = true;
+    } else {
+        onGround = false;
+    }
+}
+
+// Handle user input
+if (keyboard_check(vk_left)) {
+    xSpeed = -moveSpeed;
+}
+if (keyboard_check(vk_right)) {
+    xSpeed = moveSpeed;
+}
+if (keyboard_check_pressed(vk_up) and onGround) {
+    ySpeed = -jumpSpeed;
+}
+
+// Apply gravity and collision detection
+ySpeed += gravity;
+collisionCheck(obj_wall);
+
+// Move the player
+x += xSpeed;
+y += ySpeed;
